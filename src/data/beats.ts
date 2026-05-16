@@ -1,0 +1,47 @@
+export const beats = [
+  {
+    id: 1,
+    title: "Midnight Dreams",
+    genre: "Trap",
+    bpm: 140,
+    key: "F Minor",
+    price: 29,
+    cover: "/beats/beat1.jpg",
+    preview: "/audio/preview1.wav",
+    licenses: {
+      basic: 29,
+      premium: 49,
+      exclusive: 149,
+    },
+  },
+  {
+    id: 2,
+    title: "Neon Lights",
+    genre: "Afrobeats",
+    bpm: 102,
+    key: "G Major",
+    price: 35,
+    cover: "/beats/beat2.jpg",
+    preview: "/audio/preview2.wav",
+    licenses: {
+      basic: 29,
+      premium: 59,
+      exclusive: 199,
+    },
+  },
+  {
+    id: 3,
+    title: "Dark Vibes",
+    genre: "Drill",
+    bpm: 140,
+    key: "G Major",
+    price: 35,
+    cover: "/beats/beat3.jpg",
+    preview: "/audio/preview3.wav",
+    licenses: {
+      basic: 29,
+      premium: 59,
+      exclusive: 199,
+    },
+  },
+];
