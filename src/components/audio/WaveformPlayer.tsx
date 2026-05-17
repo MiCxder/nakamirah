@@ -59,8 +59,8 @@ const isActive = current === url;
 });
 
       wave.on("finish", () => {
-  pause();        // stops audio properly
-  setProgress(0); // reset UI only
+  wave.pause();
+  setProgress(0);
 });
     }
 
@@ -76,8 +76,8 @@ const isActive = current === url;
 
         await new Promise((res) => setTimeout(res, 50));
 
-        wave.load(url);
-        setIsPlaying(false);
+       wave.load(url);
+        wave.pause();
         setProgress(0);
       } catch (err: any) {
         if (err?.name !== "AbortError") {
@@ -104,7 +104,7 @@ const isActive = current === url;
   // ---------------------------
   const togglePlay = () => {
   if (isActive && isPlaying) {
-    pause();
+    waveRef.current?.pause();
   } else {
     play(url);
   }

@@ -21,36 +21,36 @@ type Beat = {
 };
 
 export default function BeatClient({ beat }: { beat: Beat }) {
-const [loading, setLoading] = useState(false);
-const [success, setSuccess] = useState(false);
-const [license, setLicense] = useState<LicenseType>("basic");
-const [showToast, setShowToast] = useState(false);
-const { addToCart } = useCart();
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [license, setLicense] = useState<LicenseType>("basic");
+  const [showToast, setShowToast] = useState(false);
+
+  const { addToCart } = useCart();
 
   // 🔥 dynamic pricing based on selected license
   const price = beat.licenses[license];
 
   const handleAddToCart = async () => {
-  setLoading(true);
+    setLoading(true);
 
-  // simulate small UX delay (optional but feels premium)
-  await new Promise((r) => setTimeout(r, 600));
+    await new Promise((r) => setTimeout(r, 600));
 
-  addToCart({
-  id: beat.id,
-  title: beat.title,
-  price,
-  license,
-  preview: beat.preview, 
-});
+    // ✅ FIX: ensure cart payload is stable + type-safe
+    addToCart({
+      id: beat.id,
+      title: beat.title,
+      price,
+      license,
+    });
 
-  setLoading(false);
-  setSuccess(true);
-  setShowToast(true);
+    setLoading(false);
+    setSuccess(true);
+    setShowToast(true);
 
-  setTimeout(() => setSuccess(false), 1200);
-  setTimeout(() => setShowToast(false), 2000);
-};
+    setTimeout(() => setSuccess(false), 1200);
+    setTimeout(() => setShowToast(false), 2000);
+  };
 
   return (
     <main className="container mx-auto px-6 py-16 max-w-6xl">
@@ -105,15 +105,14 @@ const { addToCart } = useCart();
                 </div>
               </div>
 
-              {/* 💎 LIQUID GLASS BUTTON */}
               <GlassButton
-  onClick={handleAddToCart}
-  loading={loading}
-  success={success}
-  className="w-full mt-5"
->
-  Add to Cart
-</GlassButton>
+                onClick={handleAddToCart}
+                loading={loading}
+                success={success}
+                className="w-full mt-5"
+              >
+                Add to Cart
+              </GlassButton>
 
             </div>
 
