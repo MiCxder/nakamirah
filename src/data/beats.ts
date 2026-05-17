@@ -6,8 +6,10 @@ export const beats = [
     bpm: 140,
     key: "F Minor",
     price: 29,
-    cover: "/beats/beat1.jpg",
-    preview: "/audio/preview1.wav",
+    cover:
+      "https://res.cloudinary.com/dvql8bgan/image/upload/v1778968771/beat1_fa5eil.jpg",
+    preview:
+      "https://res.cloudinary.com/dvql8bgan/video/upload/v1778968012/preview1_jjtsfz.mp3",
     licenses: {
       basic: 29,
       premium: 49,
@@ -21,8 +23,10 @@ export const beats = [
     bpm: 102,
     key: "G Major",
     price: 35,
-    cover: "/beats/beat2.jpg",
-    preview: "/audio/preview2.wav",
+    cover:
+      "https://res.cloudinary.com/dvql8bgan/image/upload/v1778968816/beat2_ukxqwa.jpg",
+    preview:
+      "https://res.cloudinary.com/dvql8bgan/video/upload/v1778968012/preview2_jjtsfz.mp3",
     licenses: {
       basic: 29,
       premium: 59,
@@ -36,8 +40,10 @@ export const beats = [
     bpm: 140,
     key: "G Major",
     price: 35,
-    cover: "/beats/beat3.jpg",
-    preview: "/audio/preview3.wav",
+    cover:
+      "https://res.cloudinary.com/dvql8bgan/image/upload/v1778968857/beat3_n0l93e.jpg",
+    preview:
+      "https://res.cloudinary.com/dvql8bgan/video/upload/v1778968012/preview3_jjtsfz.mp3",
     licenses: {
       basic: 29,
       premium: 59,
