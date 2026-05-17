@@ -33,7 +33,6 @@ const isActive = current === url;
         barRadius: 3,
         height: 80,
         normalize: true,
-        responsive: true,
       });
 
       const wave = waveRef.current;
