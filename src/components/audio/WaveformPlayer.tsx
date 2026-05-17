@@ -50,9 +50,13 @@ const isActive = current === url;
       });
 
       // also update when seeking
-      wave.on("seek", (p: number) => {
-        setProgress(p * 100);
-      });
+      wave.on("interaction", () => {
+  const currentTime = wave.getCurrentTime();
+  const duration = wave.getDuration();
+
+  const progress = (currentTime / duration) * 100;
+  setProgress(progress);
+});
 
       wave.on("finish", () => {
         setIsPlaying(false);
