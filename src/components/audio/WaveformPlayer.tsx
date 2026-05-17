@@ -59,9 +59,9 @@ const isActive = current === url;
 });
 
       wave.on("finish", () => {
-        setIsPlaying(false);
-        setProgress(0);
-      });
+  pause();        // stops audio properly
+  setProgress(0); // reset UI only
+});
     }
 
     const wave = waveRef.current;
