@@ -35,7 +35,7 @@ export default function CartPage() {
                 </p>
 
                 <button
-                  onClick={() => removeFromCart(index)}
+                  onClick={() => removeFromCart(item.id, item.license)}
                   className="text-red-400 text-sm mt-1"
                 >
                   Remove
