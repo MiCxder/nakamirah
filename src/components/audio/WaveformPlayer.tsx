@@ -10,18 +10,18 @@ export default function WaveformPlayer({ url }: { url: string }) {
   const waveRef = useRef<WaveSurfer | null>(null);
   const loadingRef = useRef(false);
 
-  const [progress, setProgress] = useState(0); // 0 - 100
+  const [progress, setProgress] = useState(0);
 
-  const { current, play, isPlaying } = useAudio();
+  const { current, play, pause, isPlaying } = useAudio();
 
-const isActive = current === url;
+  const isActive = current === url;
 
+  // ---------------------------
+  // INIT WAVESURFER
+  // ---------------------------
   useEffect(() => {
     if (!containerRef.current) return;
 
-    // ---------------------------
-    // INIT WAVESURFER
-    // ---------------------------
     if (!waveRef.current) {
       waveRef.current = WaveSurfer.create({
         container: containerRef.current,
@@ -37,99 +37,88 @@ const isActive = current === url;
 
       const wave = waveRef.current;
 
-      // ---------------------------
-      // REAL-TIME PROGRESS TRACKING
-      // ---------------------------
-      wave.on("audioprocess", () => {
-        const current = wave.getCurrentTime();
+      wave.on("timeupdate", (currentTime: number) => {
         const duration = wave.getDuration();
-
         if (duration > 0) {
-          setProgress((current / duration) * 100);
+          setProgress((currentTime / duration) * 100);
         }
       });
 
-      // also update when seeking
-      wave.on("interaction", () => {
-  const currentTime = wave.getCurrentTime();
-  const duration = wave.getDuration();
-
-  const progress = (currentTime / duration) * 100;
-  setProgress(progress);
-});
-
       wave.on("finish", () => {
-  wave.pause();
-  setProgress(0);
-});
+        pause();
+        setProgress(0);
+      });
+
+      wave.on("error", (err) => {
+        console.warn("Waveform error:", err);
+      });
     }
 
     const wave = waveRef.current;
 
     const loadAudio = async () => {
-      if (!wave || loadingRef.current) return;
+      if (!url || !url.includes("cloudinary")) {
+  console.warn("Invalid audio URL:", url);
+  return;
+}
 
-      loadingRef.current = true;
+try {
+  const testAudio = new Audio();
+  testAudio.src = url;
 
-      try {
-        wave.stop?.();
+  testAudio.onerror = () => {
+    console.warn("Audio failed to load (CORS or invalid file):", url);
+  };
 
-        await new Promise((res) => setTimeout(res, 50));
-
-       wave.load(url);
-        wave.pause();
-        setProgress(0);
-      } catch (err: any) {
-        if (err?.name !== "AbortError") {
-          console.warn("Waveform load error:", err);
-        }
-      } finally {
-        loadingRef.current = false;
-      }
+  wave.load(url);
+} catch (err) {
+  console.warn("WaveSurfer load failed:", err);
+}
     };
 
     loadAudio();
 
     return () => {
-      try {
-        waveRef.current?.unAll?.();
-        waveRef.current?.destroy();
-        waveRef.current = null;
-      } catch {}
+      waveRef.current?.destroy();
+      waveRef.current = null;
     };
   }, [url]);
 
   // ---------------------------
-  // PLAY / PAUSE
+  // PLAY / PAUSE (SYNCED)
   // ---------------------------
   const togglePlay = () => {
-  if (isActive && isPlaying) {
-    waveRef.current?.pause();
-  } else {
-    play(url);
-  }
-};
+    const wave = waveRef.current;
+    if (!wave) return;
+
+    if (isActive && isPlaying) {
+      wave.pause();
+      pause();
+    } else {
+      wave.play();
+      play(url);
+    }
+  };
 
   // ---------------------------
-  // CLICK PROGRESS BAR (SCRUB)
+  // SEEK
   // ---------------------------
   const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!waveRef.current) return;
+    const wave = waveRef.current;
+    if (!wave) return;
 
     const rect = e.currentTarget.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
-    const percent = clickX / rect.width;
+    const percent = (e.clientX - rect.left) / rect.width;
 
-    waveRef.current.seekTo(percent);
+    wave.seekTo(percent);
     setProgress(percent * 100);
   };
 
   return (
     <div className="w-full rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur-xl p-5 hover:border-purple-500/30 transition">
 
-      {/* TOP ROW */}
+      {/* HEADER */}
       <div className="flex items-center justify-between mb-4">
-
         <div>
           <p className="text-sm text-zinc-300 font-medium">Preview</p>
           <p className="text-xs text-zinc-500">High-quality audio preview</p>
@@ -137,16 +126,11 @@ const isActive = current === url;
 
         <button
           onClick={togglePlay}
-          className={`
-            flex items-center gap-2 px-4 py-2 rounded-full
-            border border-zinc-700 bg-black/30
-            hover:bg-purple-600 hover:border-purple-500
-            transition-all duration-300
-          `}
+          className="flex items-center gap-2 px-4 py-2 rounded-full border border-zinc-700 bg-black/30 hover:bg-purple-600 hover:border-purple-500 transition-all"
         >
-          {isPlaying ? <Pause size={16} /> : <Play size={16} />}
+          {isActive && isPlaying ? <Pause size={16} /> : <Play size={16} />}
           <span className="text-sm">
-            {isPlaying ? "Pause" : "Play Preview"}
+            {isActive && isPlaying ? "Pause" : "Play Preview"}
           </span>
         </button>
       </div>
@@ -154,7 +138,7 @@ const isActive = current === url;
       {/* WAVEFORM */}
       <div ref={containerRef} className="rounded-lg overflow-hidden" />
 
-      {/* REAL PROGRESS BAR (CLICKABLE) */}
+      {/* PROGRESS BAR */}
       <div
         onClick={handleSeek}
         className="mt-4 w-full h-2 bg-zinc-800 rounded-full cursor-pointer overflow-hidden"
@@ -165,7 +149,7 @@ const isActive = current === url;
         />
       </div>
 
-      {/* FOOTER INFO */}
+      {/* FOOTER */}
       <div className="mt-2 flex justify-between text-xs text-zinc-500">
         <span>{Math.floor(progress)}%</span>
         <span>Click to seek</span>

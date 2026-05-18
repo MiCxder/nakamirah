@@ -1,10 +1,12 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { beats } from "@/data/beats";
 import BeatCard from "@/components/beat/BeatCard";
 import MagneticButton from "@/components/ui/MagneticButton";
+import FadeIn from "@/components/ui/FadeIn";
 
 export default function HomePage() {
   const [scrollY, setScrollY] = useState(0);
@@ -80,13 +82,19 @@ const particles = [
   }}
 >
 
-    <h1 className="text-5xl md:text-7xl font-bold tracking-tight glow-text">
-      NAKAMIRAH BEATS
-    </h1>
+<motion.div
+  initial={{ opacity: 0, y: 60 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.8, ease: "easeOut" }}
+>
+  <h1 className="text-5xl md:text-7xl font-bold">
+    NAKAMIRAH BEATS
+  </h1>
 
-    <p className="mt-6 text-zinc-300 text-lg">
-      Premium instrumentals, beats, and sample packs for serious artists.
-    </p>
+  <p className="mt-6 text-zinc-300 text-lg">
+    Premium instrumentals, beats, and sample packs for serious artists.
+  </p>
+</motion.div>
 
     {/* CTA BUTTONS */}
     <div className="mt-8 flex gap-4 justify-center">

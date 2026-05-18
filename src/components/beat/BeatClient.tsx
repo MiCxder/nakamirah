@@ -14,10 +14,10 @@ type Beat = {
   title: string;
   genre: string;
   bpm: number;
-  key: string;
+  musical_key: string; // ← matches Supabase
   preview: string;
   price: number;
-  licenses: Record<LicenseType, number>;
+  licenses?: Record<LicenseType, number>;
 };
 
 export default function BeatClient({ beat }: { beat: Beat }) {
@@ -28,15 +28,24 @@ export default function BeatClient({ beat }: { beat: Beat }) {
 
   const { addToCart } = useCart();
 
-  // 🔥 dynamic pricing based on selected license
-  const price = beat.licenses[license];
+  /**
+   * SAFE LICENSE HANDLING
+   * - If licenses exist in DB → use them
+   * - If not → fallback to base price
+   */
+  const licenses = beat.licenses ?? {
+    basic: beat.price,
+    premium: beat.price,
+    exclusive: beat.price,
+  };
+
+  const price = licenses[license];
 
   const handleAddToCart = async () => {
     setLoading(true);
 
     await new Promise((r) => setTimeout(r, 600));
 
-    // ✅ FIX: ensure cart payload is stable + type-safe
     addToCart({
       id: beat.id,
       title: beat.title,
@@ -62,7 +71,7 @@ export default function BeatClient({ beat }: { beat: Beat }) {
         </h1>
 
         <p className="text-zinc-400 mt-3 uppercase tracking-wider text-sm">
-          {beat.genre} • {beat.bpm} BPM • {beat.key}
+         {beat.genre} • {beat.bpm} BPM • {beat.musical_key}
         </p>
       </div>
 
@@ -119,7 +128,10 @@ export default function BeatClient({ beat }: { beat: Beat }) {
             {/* LICENSE SELECTOR */}
             <div className="bg-zinc-900/40 border border-zinc-800 rounded-2xl p-5">
               <LicenseSelector
-                beat={beat}
+                beat={{
+                  ...beat,
+                  licenses,
+                }}
                 selected={license}
                 setSelected={setLicense}
               />
