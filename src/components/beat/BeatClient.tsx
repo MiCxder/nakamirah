@@ -16,8 +16,10 @@ type Beat = {
   bpm: number;
   musical_key: string; // ← matches Supabase
   preview: string;
-  price: number;
-  licenses?: Record<LicenseType, number>;
+  
+  price_basic: number;
+price_premium: number;
+price_exclusive: number;
 };
 
 export default function BeatClient({ beat }: { beat: Beat }) {
@@ -39,7 +41,12 @@ export default function BeatClient({ beat }: { beat: Beat }) {
     exclusive: beat.price,
   };
 
-  const price = licenses[license];
+  const price =
+  license === "basic"
+    ? beat.price_basic
+    : license === "premium"
+    ? beat.price_premium
+    : beat.price_exclusive;
 
   const handleAddToCart = async () => {
     setLoading(true);
