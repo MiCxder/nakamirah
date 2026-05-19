@@ -3,14 +3,24 @@
 type LicenseType = "basic" | "premium" | "exclusive";
 
 type Beat = {
-  licenses: Record<LicenseType, number>;
+  id: number;
+  title: string;
+  genre: string;
+  bpm: number;
+  musical_key: string;
+  preview: string;
+  cover?: string;
+
+  price_basic: number;
+  price_premium: number;
+  price_exclusive: number;
 };
 
 type LicenseOption = {
-  id: LicenseType;
-  title: string;
-  desc: string;
+  id: "basic" | "premium" | "exclusive";
+  label: string;
   price: number;
+  desc?: string;
 };
 
 export default function LicenseSelector({
@@ -23,25 +33,25 @@ export default function LicenseSelector({
   setSelected: (val: LicenseType) => void;
 }) {
   const licenses: LicenseOption[] = [
-    {
-      id: "basic",
-      title: "Basic License",
-      desc: "MP3 lease • Non-exclusive use • Limited distribution",
-      price: beat.licenses.basic,
-    },
-    {
-      id: "premium",
-      title: "Premium License",
-      desc: "WAV + MP3 • Higher streams • Monetization allowed",
-      price: beat.licenses.premium,
-    },
-    {
-      id: "exclusive",
-      title: "Exclusive Rights",
-      desc: "Full ownership • Beat removed from store • Unlimited usage",
-      price: beat.licenses.exclusive,
-    },
-  ];
+  {
+    id: "basic",
+    label: "Basic",
+    price: beat.price_basic,
+    desc: "MP3 lease for personal and non-commercial use",
+  },
+  {
+    id: "premium",
+    label: "Premium",
+    price: beat.price_premium,
+    desc: "WAV + trackouts for streaming and monetized use",
+  },
+  {
+    id: "exclusive",
+    label: "Exclusive",
+    price: beat.price_exclusive,
+    desc: "Full ownership and exclusive rights",
+  },
+];
 
   return (
     <div className="space-y-4">
@@ -79,7 +89,7 @@ export default function LicenseSelector({
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="font-medium text-white group-hover:text-purple-300 transition">
-                      {lic.title}
+                      {lic.label}
                     </span>
 
                     {isActive && (

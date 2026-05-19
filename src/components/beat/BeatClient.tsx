@@ -14,12 +14,13 @@ type Beat = {
   title: string;
   genre: string;
   bpm: number;
-  musical_key: string; // ← matches Supabase
+  musical_key: string;
   preview: string;
-  
+  cover?: string;
+
   price_basic: number;
-price_premium: number;
-price_exclusive: number;
+  price_premium: number;
+  price_exclusive: number;
 };
 
 export default function BeatClient({ beat }: { beat: Beat }) {
@@ -35,18 +36,14 @@ export default function BeatClient({ beat }: { beat: Beat }) {
    * - If licenses exist in DB → use them
    * - If not → fallback to base price
    */
-  const licenses = beat.licenses ?? {
-    basic: beat.price,
-    premium: beat.price,
-    exclusive: beat.price,
-  };
 
-  const price =
-  license === "basic"
-    ? beat.price_basic
-    : license === "premium"
-    ? beat.price_premium
-    : beat.price_exclusive;
+  const priceMap = {
+  basic: beat.price_basic,
+  premium: beat.price_premium,
+  exclusive: beat.price_exclusive,
+};
+
+const price = priceMap[license];
 
   const handleAddToCart = async () => {
     setLoading(true);
@@ -135,13 +132,10 @@ export default function BeatClient({ beat }: { beat: Beat }) {
             {/* LICENSE SELECTOR */}
             <div className="bg-zinc-900/40 border border-zinc-800 rounded-2xl p-5">
               <LicenseSelector
-                beat={{
-                  ...beat,
-                  licenses,
-                }}
-                selected={license}
-                setSelected={setLicense}
-              />
+  beat={beat}
+  selected={license}
+  setSelected={setLicense}
+/>
             </div>
 
           </div>
