@@ -4,8 +4,8 @@ export type Beat = {
   genre: string;
   bpm: number;
   musical_key: string;
+  cover: string;
   preview: string;
-  cover?: string;
 
   price_basic: number;
   price_premium: number;
