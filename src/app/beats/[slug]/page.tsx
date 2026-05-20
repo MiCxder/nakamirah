@@ -1,5 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import BeatClient from "@/components/beat/BeatClient";
+import { Beat } from "@/types/beat";
 
 export default async function Page({
   params,
@@ -7,10 +8,9 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  const id = Number(slug);
 
-  const id = Number(slug); // convert to number
-
-  if (isNaN(id)) {
+  if (!id || isNaN(id)) {
     return (
       <div className="container mx-auto px-6 py-20">
         <h1 className="text-2xl font-bold">Invalid beat link</h1>
@@ -18,16 +18,14 @@ export default async function Page({
     );
   }
 
-  const { data: beat, error } = await supabase
+  const { data, error } = await supabase
     .from("beats")
     .select("*")
-    .eq("id", id) // correct type
-    .maybeSingle(); // safer than .single()
+    .eq("id", id)
+    .single();
 
-  console.log("QUERY RESULT:", beat);
-  console.log("ERROR:", error);
 
-  if (!beat) {
+  if (error || !data) {
     return (
       <div className="container mx-auto px-6 py-20">
         <h1 className="text-2xl font-bold">Beat not found</h1>
@@ -36,5 +34,16 @@ export default async function Page({
     );
   }
 
-  return <BeatClient beat={beat} />;
+ const beat: Beat | null = data ?? null;
+
+if (!beat) {
+  return (
+    <div className="container mx-auto px-6 py-20">
+      <h1 className="text-2xl font-bold">Beat not found</h1>
+      <p className="text-zinc-500 mt-2">ID: {slug}</p>
+    </div>
+  );
+}
+
+return <BeatClient beat={beat} />;
 }

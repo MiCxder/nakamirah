@@ -5,21 +5,17 @@ import { Play, Pause } from "lucide-react";
 import { useAudio } from "@/lib/AudioContext";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import type { Beat as BeatType } from "@/types/beat";
 
-type Beat = {
-  id: number;
-  title: string;
-  genre: string;
-  bpm: number;
-  price: number;
-  cover: string;
-  preview: string;
-};
-
-export default function BeatCard({ beat }: { beat: Beat }) {
+export default function BeatCard({ beat }: { beat: BeatType }) {
   const { current, play, pause, isPlaying } = useAudio();
 
   const isActive = current === beat.preview;
+
+  const displayPrice =
+    beat.price_basic ?? beat.price_premium ?? beat.price_exclusive ?? 0;
+
+  const coverSrc = beat.cover ?? "/hero-bg.jpeg";
 
   const handlePlay = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -53,7 +49,7 @@ export default function BeatCard({ beat }: { beat: Beat }) {
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
             <Image
-              src={beat.cover}
+              src={coverSrc}
              alt={beat.title}
              fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -87,7 +83,7 @@ export default function BeatCard({ beat }: { beat: Beat }) {
 
           {/* PRICE */}
           <div className="absolute top-3 right-3 bg-black/50 backdrop-blur-md border border-zinc-800 px-3 py-1 rounded-full text-sm text-purple-400 font-semibold">
-            ${beat.price}
+            ${displayPrice}
           </div>
         </div>
 
