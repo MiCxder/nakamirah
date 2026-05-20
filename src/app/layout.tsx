@@ -11,6 +11,10 @@ export const metadata = {
   description: "Premium beats, loops and instrumentals",
 };
 
+/**
+ * Root layout must remain a Server Component.
+ * Do not use client-side hooks here.
+ */
 export default function RootLayout({
   children,
 }: {
@@ -28,14 +32,16 @@ export default function RootLayout({
           <AudioProvider>
 
             <ClientLayout>
+              {/* Navbar + layout logic handled inside ClientLayout */}
 
-              {/* 🔥 NAVBAR OFFSET */}
+              {/* NAVBAR OFFSET */}
               <div className="h-[80px]" />
 
               <main className="min-h-screen">
                 {children}
               </main>
 
+              
             </ClientLayout>
 
             {/* GLOBAL STICKY PLAYER */}

@@ -24,6 +24,7 @@ type CartContextType = {
   cart: CartItem[];
   addToCart: (item: CartItem) => void;
   removeFromCart: (id: number, license: LicenseType) => void;
+  clearCart: () => void;
   subtotal: number;
 };
 
@@ -110,13 +111,20 @@ export function CartProvider({
   };
 
   /* =======================
+     CLEAR CART
+  ======================= */
+  const clearCart = () => {
+    setCart([]);
+  };
+
+  /* =======================
      PROVIDER VALUE
   ======================= */
   const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
 
   return (
     <CartContext.Provider
-  value={{ cart, addToCart, removeFromCart, subtotal }}
+      value={{ cart, addToCart, removeFromCart, clearCart, subtotal }}
 >
       {children}
     </CartContext.Provider>

@@ -12,7 +12,7 @@ type Props = {
 };
 
 export default function CartDrawer({ open, setOpen }: Props) {
-  const { cart, removeFromCart } = useCart();
+  const { cart, removeFromCart, clearCart } = useCart();
 
   const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
   const tax = subtotal * 0.075;
@@ -79,12 +79,14 @@ export default function CartDrawer({ open, setOpen }: Props) {
           total: total,
         }),
       });
+        setPaid(true);
     } catch (err) {
       console.warn("Email failed:", err);
     }
 
     // ✅ CLEAR CART
     localStorage.removeItem("nakamirah_cart");
+      clearCart();
 
     // ✅ REDIRECT
     window.location.href = "/checkout/success";
