@@ -57,32 +57,38 @@ export default function WaveformPlayer({ url }: { url: string }) {
     const wave = waveRef.current;
 
     const loadAudio = async () => {
-      if (!url || !url.includes("cloudinary")) {
-  console.warn("Invalid audio URL:", url);
-  return;
-}
+      if (!url) {
+        console.warn("No audio URL provided");
+        return;
+      }
 
-try {
-  const testAudio = new Audio();
-  testAudio.src = url;
-
-  testAudio.onerror = () => {
-    console.warn("Audio failed to load (CORS or invalid file):", url);
-  };
-
-  wave.load(url);
-} catch (err) {
-  console.warn("WaveSurfer load failed:", err);
-}
+      try {
+        wave.load(url);
+      } catch (err) {
+        console.warn("WaveSurfer load failed:", err);
+      }
     };
 
     loadAudio();
 
     return () => {
-      waveRef.current?.destroy();
+  const wave = waveRef.current;
+
+  if (wave) {
+    try {
+      wave.unAll?.(); // remove all listeners
+      wave.destroy?.();
+    } catch (err: any) {
+      // Ignore AbortError (normal when unmounting during load)
+      if (err?.name !== "AbortError") {
+        console.warn("WaveSurfer destroy error:", err);
+      }
+    } finally {
       waveRef.current = null;
-    };
-  }, [url]);
+    }
+  }
+};
+  }, [url, isActive, isPlaying, play, pause]);
 
   // ---------------------------
   // PLAY / PAUSE (SYNCED)

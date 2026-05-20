@@ -1,26 +1,40 @@
 
 import BeatCard from "@/components/beat/BeatCard";
-import FadeIn from "@/components/ui/FadeIn";
 import { supabase } from "@/lib/supabase";
+import { Beat } from "@/types/beat";
 import {
   MotionContainer,
   MotionItem,
   MotionHover,
 } from "@/components/ui/Motion";
 
-export default async function Page() {
-  const { data, error } = await supabase
-    .from("beats")
-    .select("*");
+export default async function Page({
+  searchParams,
+}: {
+  searchParams?: { search?: string };
+}) {
+  const searchQuery = searchParams?.search?.trim() ?? "";
+  const query = supabase.from("beats").select("*");
 
-     if (error) {
-    console.error("Error fetching beats:", error);
+  const { data, error } = searchQuery
+    ? await query.or(
+        `title.ilike.%${searchQuery}%,genre.ilike.%${searchQuery}%`
+      )
+    : await query;
+
+  if (error) {
+    console.error("Supabase error:", JSON.stringify(error, null, 2));
   }
-    const beats = data ?? [];
+
+  const beats: Beat[] = data ?? [];
+
+  const heading = searchQuery
+    ? `Search results for "${searchQuery}"`
+    : "Browse Beats";
 
   return (
     <main className="container mx-auto px-6 py-20">
-      <h1 className="text-4xl font-bold mb-10">Browse Beats</h1>
+      <h1 className="text-4xl font-bold mb-10">{heading}</h1>
 
      <MotionContainer>
   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">

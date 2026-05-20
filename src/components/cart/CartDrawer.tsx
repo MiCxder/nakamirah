@@ -68,7 +68,7 @@ export default function CartDrawer({ open, setOpen }: Props) {
   // ✅ SEND EMAIL (wrapped async)
   (async () => {
     try {
-      await fetch("/api/send-order-email", {
+      await fetch("/api/end-order-email", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

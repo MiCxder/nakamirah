@@ -6,22 +6,9 @@ import Toast from "@/components/ui/Toast";
 import { useCart } from "@/lib/CartContext";
 import WaveformPlayer from "@/components/audio/WaveformPlayer";
 import LicenseSelector from "@/components/beat/LicenseSelector";
+import type { Beat } from "@/types/beat";
 
 type LicenseType = "basic" | "premium" | "exclusive";
-
-type Beat = {
-  id: number;
-  title: string;
-  genre: string;
-  bpm: number;
-  musical_key: string;
-  preview: string;
-  cover?: string;
-
-  price_basic: number;
-  price_premium: number;
-  price_exclusive: number;
-};
 
 export default function BeatClient({ beat }: { beat: Beat }) {
   const [loading, setLoading] = useState(false);
