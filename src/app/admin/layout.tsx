@@ -1,6 +1,6 @@
 "use client";
 
-
+import { Toaster } from "sonner";
 import { useState } from "react";
 import Link from "next/link";
 import { Music, Plus, BarChart3, LayoutDashboard, Menu } from "lucide-react";
@@ -14,6 +14,8 @@ export default function AdminLayout({
 
   return (
     <div className="flex min-h-screen bg-zinc-950 text-white">
+
+<Toaster position="top-right" richColors />
 
       {/* SIDEBAR */}
       <aside
