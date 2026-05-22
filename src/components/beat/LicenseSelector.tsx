@@ -1,5 +1,7 @@
 "use client";
 
+import { Beat } from "@/types/beat";
+
 type LicenseType = "basic" | "premium" | "exclusive";
 
 type Beat = {
