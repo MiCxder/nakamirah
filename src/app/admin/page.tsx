@@ -19,7 +19,6 @@ export default async function AdminDashboard() {
     }, 0) || 0;
 
   const recentBeats = beats?.slice(0, 5) || [];
-
   return (
     <div className="min-h-screen bg-zinc-950 text-white px-6 py-10">
 
@@ -116,7 +115,7 @@ export default async function AdminDashboard() {
           ))}
         </div>
       </div>
-
     </div>
+    
   );
 }
