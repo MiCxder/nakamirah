@@ -64,6 +64,18 @@ const price = priceMap[license];
         <p className="text-zinc-400 mt-3 uppercase tracking-wider text-sm">
          {beat.genre} • {beat.bpm} BPM • {beat.musical_key}
         </p>
+        {beat.tags?.length ? (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {beat.tags.map((tag) => (
+              <span
+                key={tag}
+                className="rounded-full border border-purple-500/40 bg-purple-500/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-purple-200"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        ) : null}
       </div>
 
       {/* GRID */}
