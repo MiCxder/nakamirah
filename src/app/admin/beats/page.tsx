@@ -19,95 +19,140 @@ export default function AdminBeatsPage() {
   const [autoDetect, setAutoDetect] = useState(true);
   const [detecting, setDetecting] = useState(false);
   const [detectionError, setDetectionError] = useState<string | null>(null);
- const waveformRef = useRef<HTMLDivElement | null>(null);
- const waveInstance = useRef<any>(null);
+  const waveformRef = useRef<HTMLDivElement | null>(null);
+  const waveInstance = useRef<any>(null);
   const [cover, setCover] = useState<File | null>(null);
   const [preview, setPreview] = useState<File | null>(null);
+
+  const [coverPreviewUrl, setCoverPreviewUrl] = useState<string | null>(null);
+
+  const [tags, setTags] = useState("");
 
   const [basic, setBasic] = useState("");
   const [premium, setPremium] = useState("");
   const [exclusive, setExclusive] = useState("");
 
   const [dragActive, setDragActive] = useState(false);
-  const coverPreviewUrl = cover ? URL.createObjectURL(cover) : null;
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!cover) {
+      setCoverPreviewUrl(null);
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(cover);
+    setCoverPreviewUrl(objectUrl);
+
+    return () => {
+      URL.revokeObjectURL(objectUrl);
+    };
+  }, [cover]);
 
   const uploadFileWithProgress = async (file: File, path: string) => {
-  return new Promise<string>((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
+    setProgress(20);
+    setUploadError(null);
 
-    const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/beats/${path}`;
+    const safePath = path
+      .split("/")
+      .map((segment) =>
+        segment
+          .trim()
+          .replace(/\s+/g, "-")
+          .replace(/[^a-zA-Z0-9._-]/g, "")
+      )
+      .join("/");
 
-    xhr.open("POST", url);
-    xhr.setRequestHeader(
-      "Authorization",
-      `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`
-    );
+    const { data, error } = await supabase.storage
+      .from("beats")
+      .upload(safePath, file, { upsert: false });
 
-    xhr.upload.onprogress = (event) => {
-      if (event.lengthComputable) {
-        const percent = Math.round((event.loaded / event.total) * 100);
-        setProgress(percent);
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    setProgress(60);
+
+    const publicData = await supabase.storage
+      .from("beats")
+      .getPublicUrl(safePath);
+
+    if (!publicData?.data?.publicUrl) {
+      const signedData = await supabase.storage
+        .from("beats")
+        .createSignedUrl(safePath, 60 * 60);
+
+      if (!signedData?.data?.signedUrl) {
+        throw new Error("Unable to get public or signed URL");
       }
-    };
 
-    xhr.onload = () => {
-      if (xhr.status === 200) {
-        const publicUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/beats/${path}`;
-        resolve(publicUrl);
-      } else {
-        reject(xhr.responseText);
-      }
-    };
+      setProgress(100);
+      return signedData.data.signedUrl;
+    }
 
-    xhr.onerror = () => reject("Upload failed");
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    xhr.send(formData);
-  });
-};
+    setProgress(100);
+    return publicData.data.publicUrl;
+  };
 
   const handleSubmit = async () => {
     setLoading(true);
+    setUploadError(null);
+    setProgress(0);
 
     try {
       if (!cover || !preview) {
-        alert("Upload cover and preview audio");
-        return;
+        throw new Error("Please upload both a cover image and preview audio file.");
+      }
+
+      if (!title.trim() || !genre.trim() || !basic.trim()) {
+        throw new Error("Please provide a title, genre, and basic license price.");
+      }
+
+      const basicPrice = Number(basic);
+      const premiumPrice = premium ? Number(premium) : 0;
+      const exclusivePrice = exclusive ? Number(exclusive) : 0;
+
+      if (Number.isNaN(basicPrice) || Number.isNaN(premiumPrice) || Number.isNaN(exclusivePrice)) {
+        throw new Error("Please enter valid numeric prices for licenses.");
       }
 
       const coverUrl = await uploadFileWithProgress(
-  cover,
-  `covers/${Date.now()}-${cover.name}`
-);
+        cover,
+        `covers/${Date.now()}-${cover.name}`
+      );
 
-const previewUrl = await uploadFileWithProgress(
-  preview,
-  `audio/${Date.now()}-${preview.name}`
-);
+      const previewUrl = await uploadFileWithProgress(
+        preview,
+        `audio/${Date.now()}-${preview.name}`
+      );
+
+      const tagArray = tags
+        .split(",")
+        .map((tag) => tag.trim())
+        .filter(Boolean);
 
       const { data, error } = await supabase
-  .from("beats")
-  .insert({
-    title,
-    genre,
-    bpm: Number(bpm),
-    musical_key: key,
-    cover: coverUrl,
-    preview: previewUrl,
-    price_basic: Number(basic),
-    price_premium: Number(premium),
-    price_exclusive: Number(exclusive),
-  })
-  .select()
-  .single();
+        .from("beats")
+        .insert({
+          title,
+          genre,
+          bpm: Number(bpm),
+          musical_key: key,
+          cover: coverUrl,
+          preview: previewUrl,
+          ...(tagArray.length ? { tags: tagArray } : {}),
+          price_basic: basicPrice,
+          price_premium: premiumPrice,
+          price_exclusive: exclusivePrice,
+        })
+        .select()
+        .single();
 
       if (error) throw error;
 
       toast.success("Beat uploaded successfully");
-    // redirect to beat page
-router.push(`/beats/${data.id}`);
+      // redirect to beat page
+      router.push(`/beats/${data.id}`);
     
       setTitle("");
       setGenre("");
@@ -119,9 +164,10 @@ router.push(`/beats/${data.id}`);
       setPremium("");
       setExclusive("");
     } catch (err: any) {
-  
-  toast.error("Upload failed");
-}
+      const message = err?.message || "Upload failed";
+      setUploadError(message);
+      toast.error(message);
+    }
 
     setLoading(false);
   };
@@ -322,6 +368,7 @@ useEffect(() => {
 
   return () => {
     waveInstance.current?.destroy();
+    URL.revokeObjectURL(url);
   };
 }, [preview]);
 
@@ -376,6 +423,13 @@ useEffect(() => {
             className="w-full bg-zinc-900 border border-zinc-800 px-4 py-3 rounded-xl focus:outline-none focus:border-purple-500"
           />
 
+          <input
+            placeholder="Tags (comma separated)"
+            value={tags}
+            onChange={(e) => setTags(e.target.value)}
+            className="w-full bg-zinc-900 border border-zinc-800 px-4 py-3 rounded-xl focus:outline-none focus:border-purple-500"
+          />
+
           <div className="grid grid-cols-2 gap-4">
             <input
               placeholder="BPM"
@@ -409,6 +463,9 @@ useEffect(() => {
           )}
           {detectionError && (
             <p className="text-xs text-red-400">{detectionError}</p>
+          )}
+          {uploadError && (
+            <p className="text-xs text-red-400">{uploadError}</p>
           )}
 
           {/* FILE UPLOADS */}

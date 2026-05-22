@@ -6,6 +6,7 @@ export type Beat = {
   musical_key: string;
   cover: string;
   preview: string;
+  tags?: string[];
 
   price_basic: number;
   price_premium: number;
