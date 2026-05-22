@@ -28,7 +28,7 @@ export default function HeroSection() {
   ];
 
   return (
-    <section className="relative min-h-[85vh] flex items-center justify-center text-center overflow-hidden">
+    <section className="relative min-h-[95vh] flex items-center justify-center text-center overflow-hidden">
 
       <div
         className="absolute inset-0 bg-cover bg-center scale-110 animate-slowZoom"
@@ -67,7 +67,7 @@ export default function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className="text-5xl md:text-7xl font-bold">
+          <h1 className="text-6xl md:text-8xl font-bold">
             NAKAMIRAH BEATS
           </h1>
 
