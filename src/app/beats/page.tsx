@@ -28,6 +28,10 @@ export default async function Page({
 
   const beats: Beat[] = data ?? [];
 
+  console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
+console.log("DATA:", data);
+console.log("ERROR:", error);
+
   const heading = searchQuery
     ? `Search results for "${searchQuery}"`
     : "Browse Beats";
