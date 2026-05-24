@@ -1,6 +1,8 @@
 import { supabase } from "@/lib/supabase";
 import EditBeatClient from "./EditBeatClient";
 
+export const dynamic = "force-dynamic";
+
 type Params = {
   params: Promise<{
     id: string;

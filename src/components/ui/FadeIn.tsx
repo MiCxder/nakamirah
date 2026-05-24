@@ -6,10 +6,12 @@ export default function FadeIn({
   children,
   delay = 0,
   y = 40,
+  className = "",
 }: {
   children: React.ReactNode;
   delay?: number;
   y?: number;
+  className?: string;
 }) {
   const ref = useRef<HTMLDivElement | null>(null);
   const [visible, setVisible] = useState(false);
@@ -36,6 +38,7 @@ export default function FadeIn({
   return (
     <div
       ref={ref}
+      className={className}
       style={{
         transform: visible ? "translateY(0px)" : `translateY(${y}px)`,
         opacity: visible ? 1 : 0,

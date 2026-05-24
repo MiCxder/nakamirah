@@ -5,13 +5,17 @@ import { motion } from "framer-motion";
 /* 🔥 Container for stagger animations */
 export const MotionContainer = ({
   children,
+  className = "",
 }: {
   children: React.ReactNode;
+  className?: string;
 }) => {
   return (
     <motion.div
       initial="hidden"
-      animate="show"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.18 }}
+      className={className}
       variants={{
         hidden: {},
         show: {
@@ -29,11 +33,16 @@ export const MotionContainer = ({
 /* 🔥 Individual item animation */
 export const MotionItem = ({
   children,
+  className = "",
+  delay = 0,
 }: {
   children: React.ReactNode;
+  className?: string;
+  delay?: number;
 }) => {
   return (
     <motion.div
+      className={className}
       variants={{
         hidden: {
           opacity: 0,
@@ -46,6 +55,7 @@ export const MotionItem = ({
           scale: 1,
           transition: {
             duration: 0.5,
+            delay,
             ease: "easeOut",
           },
         },

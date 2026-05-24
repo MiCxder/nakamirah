@@ -4,6 +4,7 @@ import React, { useRef } from "react";
 import type { Beat } from "@/types/beat";
 import BeatCard from "@/components/beat/BeatCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { MotionContainer, MotionItem } from "@/components/ui/Motion";
 
 export default function SectionCarousel({ items }: { items: Beat[] }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -17,7 +18,7 @@ export default function SectionCarousel({ items }: { items: Beat[] }) {
   return (
     <div>
       {/* Mobile / tablet: horizontal scroll carousel */}
-      <div className="relative block lg:hidden">
+      <MotionContainer className="relative block lg:hidden">
         <button
           aria-label="scroll left"
           onClick={() => scrollBy(-320)}
@@ -31,9 +32,12 @@ export default function SectionCarousel({ items }: { items: Beat[] }) {
           className="flex gap-4 overflow-x-auto no-scrollbar py-2 px-8 scroll-snap-x snap-mandatory"
         >
           {items.map((b) => (
-            <div key={`${b.id}-${b.title}`} className="snap-start flex-shrink-0 w-72">
+            <MotionItem
+              key={`${b.id}-${b.title}`}
+              className="snap-start flex-shrink-0 w-72"
+            >
               <BeatCard beat={b} />
-            </div>
+            </MotionItem>
           ))}
         </div>
 
@@ -44,14 +48,16 @@ export default function SectionCarousel({ items }: { items: Beat[] }) {
         >
           <ChevronRight size={18} />
         </button>
-      </div>
+      </MotionContainer>
 
       {/* Desktop: grid layout */}
-      <div className="hidden lg:grid lg:grid-cols-5 gap-6">
+      <MotionContainer className="hidden lg:grid lg:grid-cols-5 gap-6">
         {items.map((b) => (
-          <BeatCard key={`${b.id}-${b.title}`} beat={b} />
+          <MotionItem key={`${b.id}-${b.title}`}>
+            <BeatCard beat={b} />
+          </MotionItem>
         ))}
-      </div>
+      </MotionContainer>
     </div>
   );
 }

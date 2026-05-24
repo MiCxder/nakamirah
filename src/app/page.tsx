@@ -4,11 +4,7 @@ import BeatCard from "@/components/beat/BeatCard";
 import HeroSection from "@/components/home/HeroSection";
 import SectionCarousel from "@/components/home/SectionCarousel";
 import Image from "next/image";
-import {
-  MotionContainer,
-  MotionItem,
-  MotionHover,
-} from "@/components/ui/Motion";
+import FadeIn from "@/components/ui/FadeIn";
 
 export default async function HomePage() {
   // Fetch multiple curated lists concurrently
@@ -63,24 +59,26 @@ export default async function HomePage() {
       <div className="container mx-auto px-6 space-y-16 py-12">
         {sections.map((sec) => (
           <section key={sec.key} className="relative">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-4">
-                {sec.items[0]?.cover && (
-                  <div className="hidden sm:block w-14 h-14 rounded-md overflow-hidden">
-                    <Image src={sec.items[0].cover} alt={sec.title} width={56} height={56} className="object-cover" />
+            <FadeIn>
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-4">
+                  {sec.items[0]?.cover && (
+                    <div className="hidden sm:block w-14 h-14 rounded-md overflow-hidden">
+                      <Image src={sec.items[0].cover} alt={sec.title} width={56} height={56} className="object-cover" />
+                    </div>
+                  )}
+
+                  <div>
+                    <h2 className="text-2xl font-bold">{sec.title}</h2>
+                    <div className="mt-1 h-1 w-24 rounded-full bg-gradient-to-r from-purple-500 to-purple-300" />
                   </div>
-                )}
-
-                <div>
-                  <h2 className="text-2xl font-bold">{sec.title}</h2>
-                  <div className="mt-1 h-1 w-24 rounded-full bg-gradient-to-r from-purple-500 to-purple-300" />
                 </div>
-              </div>
 
-              <a href="/beats" className="text-sm text-zinc-400 hover:text-white">
-                View all
-              </a>
-            </div>
+                <a href="/beats" className="text-sm text-zinc-400 hover:text-white">
+                  View all
+                </a>
+              </div>
+            </FadeIn>
 
             <div>
               <SectionCarousel items={sec.items} />
