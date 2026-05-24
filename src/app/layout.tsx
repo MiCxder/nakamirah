@@ -5,6 +5,7 @@ import { AudioProvider } from "@/lib/AudioContext";
 import { CartProvider } from "@/lib/CartContext";
 import StickyPlayer from "@/components/audio/StickyPlayer";
 import ClientLayout from "@/components/layout/ClientLayout";
+import { Toaster } from "sonner";
 
 export const metadata = {
   title: "Nakamirah Beats",
@@ -46,6 +47,19 @@ export default function RootLayout({
 
             {/* GLOBAL STICKY PLAYER */}
             <StickyPlayer />
+            <Toaster
+              position="top-right"
+              toastOptions={{
+                classNames: {
+                  toast:
+                    "border border-white/10 bg-zinc-950/95 text-white shadow-[0_0_40px_rgba(168,85,247,0.25)] backdrop-blur-xl",
+                  title: "text-white",
+                  description: "text-zinc-400",
+                  success: "border-purple-500/40",
+                  error: "border-red-500/40",
+                },
+              }}
+            />
 
           </AudioProvider>
         </CartProvider>

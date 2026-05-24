@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Menu, ShoppingCart } from "lucide-react";
+import { CircleHelp } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useCart } from "@/lib/CartContext";
 import { useRouter } from "next/navigation";
@@ -137,6 +138,7 @@ const NavLink = ({
   <NavLink href="/kits" icon={Package} label="Sample Kits" />
   <NavLink href="/licenses" icon={FileText} label="Licenses" />
   <NavLink href="/contact" icon={Mail} label="Contact" />
+  <NavLink href="/faq" icon={CircleHelp} label="FAQ" />
 
 </div>
 
