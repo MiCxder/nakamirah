@@ -111,7 +111,7 @@ export default function EditBeatClient({ beat }: EditBeatClientProps) {
         .map((tag) => tag.trim())
         .filter(Boolean);
 
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("beats")
         .update({
           title,
@@ -124,9 +124,7 @@ export default function EditBeatClient({ beat }: EditBeatClientProps) {
           price_premium: premiumPrice,
           price_exclusive: exclusivePrice,
         })
-        .eq("id", beat.id)
-        .select()
-        .single();
+        .eq("id", beat.id);
 
       if (error) {
         throw error;

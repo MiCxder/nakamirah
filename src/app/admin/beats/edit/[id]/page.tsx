@@ -2,13 +2,15 @@ import { supabase } from "@/lib/supabase";
 import EditBeatClient from "./EditBeatClient";
 
 type Params = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 export default async function EditBeatPage({ params }: Params) {
-  if (!params?.id) {
+  const { id: beatId } = await params;
+
+  if (!beatId) {
     return (
       <div className="min-h-screen bg-zinc-950 text-white p-8">
         <h1 className="text-3xl font-bold">Edit Beat</h1>
@@ -17,7 +19,6 @@ export default async function EditBeatPage({ params }: Params) {
     );
   }
 
-  const beatId = params.id;
   const { data: beat, error } = await supabase
     .from("beats")
     .select("*")
