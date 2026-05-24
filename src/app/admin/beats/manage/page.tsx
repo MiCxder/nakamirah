@@ -34,16 +34,18 @@ export default async function ManageBeatsPage() {
 
             {/* ACTIONS */}
             <div className="flex gap-3">
-
+              {beat?.id ? (
+                <Link
+                  href={`/admin/beats/edit/${String(beat.id)}`}
+                  className="text-purple-400 hover:text-purple-300 text-sm"
+                >
+                  Edit
+                </Link>
+              ) : (
+                <span className="text-zinc-500 text-sm">No edit ID</span>
+              )}
               <Link
-                href={`/admin/beats/edit/${beat.id}`}
-                className="text-purple-400 hover:text-purple-300 text-sm"
-              >
-                Edit
-              </Link>
-
-              <Link
-                href={`/beats/${beat.id}`}
+                href={`/beats/${String(beat.id)}`}
                 className="text-zinc-400 hover:text-white text-sm"
               >
                 View
