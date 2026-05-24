@@ -111,7 +111,7 @@ export default function EditBeatClient({ beat }: EditBeatClientProps) {
         .map((tag) => tag.trim())
         .filter(Boolean);
 
-      const { error } = await supabase
+      const { data: updatedBeat, error } = await supabase
         .from("beats")
         .update({
           title,
@@ -124,14 +124,23 @@ export default function EditBeatClient({ beat }: EditBeatClientProps) {
           price_premium: premiumPrice,
           price_exclusive: exclusivePrice,
         })
-        .eq("id", beat.id);
+        .eq("id", beat.id)
+        .select("id")
+        .maybeSingle();
 
       if (error) {
         throw error;
       }
 
+      if (!updatedBeat) {
+        throw new Error(
+          "No beat was updated. Check that your Supabase beats table allows updates for the logged-in admin user."
+        );
+      }
+
       toast.success("Beat updated successfully");
       router.push("/admin/beats/manage");
+      router.refresh();
     } catch (error: any) {
       setErrorMessage(error?.message || "Update failed");
       toast.error(error?.message || "Update failed");

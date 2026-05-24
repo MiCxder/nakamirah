@@ -7,6 +7,7 @@ import {
   MotionItem,
   MotionHover,
 } from "@/components/ui/Motion";
+import FadeIn from "@/components/ui/FadeIn";
 
 export default async function Page({
   searchParams,
@@ -40,7 +41,9 @@ export default async function Page({
 
   return (
     <main className="container mx-auto px-6 py-20">
-      <h1 className="text-4xl font-bold mb-10">{heading}</h1>
+      <FadeIn y={28}>
+        <h1 className="text-4xl font-bold mb-10">{heading}</h1>
+      </FadeIn>
 
       {searchQuery ? (
         <MotionContainer>
@@ -65,12 +68,14 @@ export default async function Page({
           ) : (
             Object.entries(grouped).map(([genre, items]) => (
               <section key={genre} className="">
-                <div className="mb-6 flex items-center justify-between">
-                  <h2 className="text-xl font-semibold capitalize">{genre}</h2>
-                  <a href={`/beats?search=${encodeURIComponent(genre)}`} className="text-sm text-zinc-400 hover:text-white">
-                    View all
-                  </a>
-                </div>
+                <FadeIn y={28}>
+                  <div className="mb-6 flex items-center justify-between">
+                    <h2 className="text-xl font-semibold capitalize">{genre}</h2>
+                    <a href={`/beats?search=${encodeURIComponent(genre)}`} className="text-sm text-zinc-400 hover:text-white">
+                      View all
+                    </a>
+                  </div>
+                </FadeIn>
 
                 <MotionContainer>
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">

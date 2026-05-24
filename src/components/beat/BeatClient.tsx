@@ -7,6 +7,7 @@ import { useCart } from "@/lib/CartContext";
 import WaveformPlayer from "@/components/audio/WaveformPlayer";
 import LicenseSelector from "@/components/beat/LicenseSelector";
 import type { Beat } from "@/types/beat";
+import FadeIn from "@/components/ui/FadeIn";
 
 type LicenseType = "basic" | "premium" | "exclusive";
 
@@ -56,52 +57,57 @@ const price = priceMap[license];
     <main className="container mx-auto px-6 py-16 max-w-6xl">
 
       {/* HEADER */}
-      <div className="mb-10">
-        <h1 className="text-5xl font-bold tracking-tight">
-          {beat.title}
-        </h1>
+      <FadeIn y={32}>
+        <div className="mb-10">
+          <h1 className="text-5xl font-bold tracking-tight">
+            {beat.title}
+          </h1>
 
-        <p className="text-zinc-400 mt-3 uppercase tracking-wider text-sm">
-         {beat.genre} • {beat.bpm} BPM • {beat.musical_key}
-        </p>
-        {beat.tags?.length ? (
-          <div className="mt-3 flex flex-wrap gap-2">
-            {beat.tags.map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full border border-purple-500/40 bg-purple-500/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-purple-200"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        ) : null}
-      </div>
+          <p className="text-zinc-400 mt-3 uppercase tracking-wider text-sm">
+           {beat.genre} • {beat.bpm} BPM • {beat.musical_key}
+          </p>
+          {beat.tags?.length ? (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {beat.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-full border border-purple-500/40 bg-purple-500/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-purple-200"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          ) : null}
+        </div>
+      </FadeIn>
 
       {/* GRID */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
 
         {/* LEFT */}
-        <div className="lg:col-span-2 space-y-8">
+        <FadeIn y={36} delay={0.08} className="lg:col-span-2">
+          <div className="space-y-8">
 
-          <div className="bg-zinc-900/40 border border-zinc-800 rounded-2xl p-5 backdrop-blur-xl">
-            <WaveformPlayer url={beat.preview} />
+            <div className="bg-zinc-900/40 border border-zinc-800 rounded-2xl p-5 backdrop-blur-xl">
+              <WaveformPlayer url={beat.preview} />
+            </div>
+
+            <div className="bg-zinc-900/30 border border-zinc-800 rounded-2xl p-6">
+              <h2 className="text-lg font-semibold mb-2">
+                About this beat
+              </h2>
+
+              <p className="text-zinc-400 text-sm">
+                Professionally produced instrumental with industry mixing and mastering.
+              </p>
+            </div>
+
           </div>
-
-          <div className="bg-zinc-900/30 border border-zinc-800 rounded-2xl p-6">
-            <h2 className="text-lg font-semibold mb-2">
-              About this beat
-            </h2>
-
-            <p className="text-zinc-400 text-sm">
-              Professionally produced instrumental with industry mixing and mastering.
-            </p>
-          </div>
-
-        </div>
+        </FadeIn>
 
         {/* RIGHT */}
-        <div className="lg:col-span-1">
+        <FadeIn y={36} delay={0.14} className="lg:col-span-1">
+          <div>
           <div className="sticky top-24 space-y-6">
 
             {/* PRICE CARD */}
@@ -138,7 +144,8 @@ const price = priceMap[license];
             </div>
 
           </div>
-        </div>
+          </div>
+        </FadeIn>
 
       </div>
 
