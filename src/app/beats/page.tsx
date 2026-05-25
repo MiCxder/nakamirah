@@ -9,6 +9,9 @@ import {
 } from "@/components/ui/Motion";
 import FadeIn from "@/components/ui/FadeIn";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function Page({
   searchParams,
 }: {

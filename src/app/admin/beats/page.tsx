@@ -151,7 +151,7 @@ export default function AdminBeatsPage() {
       if (error) throw error;
 
       toast.success("Beat uploaded successfully");
-      // redirect to beat page
+      router.refresh();
       router.push(`/beats/${data.id}`);
     
       setTitle("");
