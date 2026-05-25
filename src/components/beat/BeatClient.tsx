@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import GlassButton from "@/components/ui/GlassButton";
 import Toast from "@/components/ui/Toast";
 import { useCart } from "@/lib/CartContext";
@@ -8,6 +9,7 @@ import WaveformPlayer from "@/components/audio/WaveformPlayer";
 import LicenseSelector from "@/components/beat/LicenseSelector";
 import type { Beat } from "@/types/beat";
 import FadeIn from "@/components/ui/FadeIn";
+import { formatCurrency } from "@/lib/currency";
 
 type LicenseType = "basic" | "premium" | "exclusive";
 
@@ -32,6 +34,8 @@ export default function BeatClient({ beat }: { beat: Beat }) {
 };
 
 const price = priceMap[license];
+const coverSrc = beat.cover || "/hero-bg.jpeg";
+const about = beat.description?.trim();
 
   const handleAddToCart = async () => {
     setLoading(true);
@@ -54,35 +58,69 @@ const price = priceMap[license];
   };
 
   return (
-    <main className="container mx-auto px-6 py-16 max-w-6xl">
+    <main className="mx-auto max-w-7xl px-6 py-12 lg:py-16">
 
-      {/* HEADER */}
       <FadeIn y={32}>
-        <div className="mb-10">
-          <h1 className="text-5xl font-bold tracking-tight">
-            {beat.title}
-          </h1>
-
-          <p className="text-zinc-400 mt-3 uppercase tracking-wider text-sm">
-           {beat.genre} • {beat.bpm} BPM • {beat.musical_key}
-          </p>
-          {beat.tags?.length ? (
-            <div className="mt-3 flex flex-wrap gap-2">
-              {beat.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-full border border-purple-500/40 bg-purple-500/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-purple-200"
-                >
-                  {tag}
-                </span>
-              ))}
+        <section className="grid gap-8 lg:grid-cols-[minmax(320px,0.95fr)_minmax(0,1.35fr)] lg:items-end">
+          <div className="relative aspect-square overflow-hidden rounded-[1.75rem] border border-white/10 bg-zinc-900 shadow-[0_30px_90px_rgba(0,0,0,0.45)]">
+            <Image
+              src={coverSrc}
+              alt={`${beat.title} artwork`}
+              fill
+              priority
+              sizes="(max-width: 1024px) 100vw, 42vw"
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+            <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between gap-4">
+              <span className="rounded-full border border-white/10 bg-black/45 px-3 py-1 text-xs uppercase tracking-[0.24em] text-zinc-200 backdrop-blur-md">
+                Artwork
+              </span>
+              <span className="rounded-full border border-purple-400/30 bg-purple-500/15 px-3 py-1 text-sm font-semibold text-purple-100 backdrop-blur-md">
+                {formatCurrency(beat.price_basic)}
+              </span>
             </div>
-          ) : null}
-        </div>
+          </div>
+
+          <div className="space-y-6">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-purple-300">
+                {beat.genre}
+              </p>
+              <h1 className="mt-3 text-5xl font-bold tracking-tight md:text-7xl">
+                {beat.title}
+              </h1>
+
+              <div className="mt-5 flex flex-wrap gap-3 text-sm text-zinc-300">
+                <span className="rounded-full border border-zinc-800 bg-zinc-900/70 px-4 py-2">
+                  {beat.bpm} BPM
+                </span>
+                <span className="rounded-full border border-zinc-800 bg-zinc-900/70 px-4 py-2">
+                  {beat.musical_key}
+                </span>
+                <span className="rounded-full border border-zinc-800 bg-zinc-900/70 px-4 py-2">
+                  From {formatCurrency(beat.price_basic)}
+                </span>
+              </div>
+            </div>
+
+            {beat.tags?.length ? (
+              <div className="flex flex-wrap gap-2">
+                {beat.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-full border border-purple-500/40 bg-purple-500/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-purple-200"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            ) : null}
+          </div>
+        </section>
       </FadeIn>
 
-      {/* GRID */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+      <div className="mt-12 grid grid-cols-1 gap-10 lg:grid-cols-3">
 
         {/* LEFT */}
         <FadeIn y={36} delay={0.08} className="lg:col-span-2">
@@ -92,15 +130,17 @@ const price = priceMap[license];
               <WaveformPlayer url={beat.preview} />
             </div>
 
-            <div className="bg-zinc-900/30 border border-zinc-800 rounded-2xl p-6">
-              <h2 className="text-lg font-semibold mb-2">
-                About this beat
-              </h2>
+            {about ? (
+              <div className="bg-zinc-900/30 border border-zinc-800 rounded-2xl p-6">
+                <h2 className="text-lg font-semibold mb-2">
+                  About this beat
+                </h2>
 
-              <p className="text-zinc-400 text-sm">
-                Professionally produced instrumental with industry mixing and mastering.
-              </p>
-            </div>
+                <p className="whitespace-pre-line text-sm leading-7 text-zinc-300">
+                  {about}
+                </p>
+              </div>
+            ) : null}
 
           </div>
         </FadeIn>
@@ -119,7 +159,7 @@ const price = priceMap[license];
                 </h3>
 
                 <div className="text-3xl font-bold text-purple-400">
-                  ${price}
+                  {formatCurrency(price)}
                 </div>
               </div>
 
@@ -153,7 +193,7 @@ const price = priceMap[license];
       <Toast
         show={showToast}
         message={beat.title}
-        subMessage={`${license.toUpperCase()} License • $${price}`}
+        subMessage={`${license.toUpperCase()} License • ${formatCurrency(price)}`}
       />
 
     </main>

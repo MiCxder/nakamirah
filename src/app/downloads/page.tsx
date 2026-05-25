@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import GlassButton from "@/components/ui/GlassButton";
+import { formatCurrency } from "@/lib/currency";
 
 type CartItem = {
   id: number;
@@ -54,7 +55,7 @@ export default function DownloadsPage() {
               </p>
 
               <p className="text-purple-400 font-semibold">
-                ${item.price}
+                {formatCurrency(item.price)}
               </p>
             </div>
 

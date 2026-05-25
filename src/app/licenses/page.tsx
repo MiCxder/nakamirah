@@ -26,7 +26,6 @@ const fadeUp: Variants = {
 const licenses = [
   {
     name: "Basic",
-    price: "$29",
     glow: "from-zinc-500/20 to-transparent",
     features: [
       "MP3 file",
@@ -38,7 +37,6 @@ const licenses = [
   },
   {
     name: "Premium",
-    price: "$79",
     glow: "from-purple-500/30 via-purple-600/20 to-transparent",
     popular: true,
     features: [
@@ -51,7 +49,6 @@ const licenses = [
   },
   {
     name: "Exclusive",
-    price: "$299",
     glow: "from-yellow-500/30 via-yellow-600/20 to-transparent",
     features: [
       "Full ownership",
@@ -124,8 +121,6 @@ export default function LicensesPage() {
             {/* CONTENT */}
             <div className="relative z-10">
               <h2 className="text-xl font-semibold">{lic.name}</h2>
-
-              <p className="text-4xl font-bold mt-3">{lic.price}</p>
 
               <ul className="mt-6 space-y-2 text-sm text-zinc-300">
                 {lic.features.map((f) => (

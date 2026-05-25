@@ -1,6 +1,7 @@
 "use client";
 
 import { Beat } from "@/types/beat";
+import { formatCurrency } from "@/lib/currency";
 
 type LicenseType = "basic" | "premium" | "exclusive";
 
@@ -95,7 +96,7 @@ export default function LicenseSelector({
                 {/* PRICE */}
                 <div className="text-right">
                   <span className="text-purple-400 font-bold text-sm">
-                    ${lic.price}
+                    {formatCurrency(lic.price)}
                   </span>
                 </div>
               </div>

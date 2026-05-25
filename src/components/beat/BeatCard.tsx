@@ -6,6 +6,7 @@ import { useAudio } from "@/lib/AudioContext";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import type { Beat as BeatType } from "@/types/beat";
+import { formatCurrency } from "@/lib/currency";
 
 export default function BeatCard({ beat }: { beat: BeatType }) {
   const { current, play, pause, isPlaying } = useAudio();
@@ -83,7 +84,7 @@ export default function BeatCard({ beat }: { beat: BeatType }) {
 
           {/* PRICE */}
           <div className="absolute top-3 right-3 bg-black/50 backdrop-blur-md border border-zinc-800 px-3 py-1 rounded-full text-sm text-purple-400 font-semibold">
-            ${displayPrice}
+            {formatCurrency(displayPrice)}
           </div>
         </div>
 

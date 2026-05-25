@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import GlassButton from "@/components/ui/GlassButton";
 import Link from "next/link";
+import { formatCurrency } from "@/lib/currency";
 
 type CartItem = {
   id: number;
@@ -81,7 +82,7 @@ export default function SuccessPage() {
             </div>
 
             <p className="text-purple-400 font-semibold">
-              ${item.price}
+              {formatCurrency(item.price)}
             </p>
           </div>
         ))}
@@ -89,17 +90,17 @@ export default function SuccessPage() {
         <div className="border-t border-zinc-800 pt-4 space-y-2 text-sm">
           <div className="flex justify-between text-zinc-400">
             <span>Subtotal</span>
-            <span>${total.toFixed(2)}</span>
+            <span>{formatCurrency(total)}</span>
           </div>
 
           <div className="flex justify-between text-zinc-400">
             <span>Tax</span>
-            <span>${tax.toFixed(2)}</span>
+            <span>{formatCurrency(tax)}</span>
           </div>
 
           <div className="flex justify-between text-white font-bold text-lg">
             <span>Total</span>
-            <span>${grandTotal.toFixed(2)}</span>
+            <span>{formatCurrency(grandTotal)}</span>
           </div>
         </div>
       </div>
