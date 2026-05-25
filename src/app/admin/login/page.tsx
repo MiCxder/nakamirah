@@ -35,22 +35,51 @@ export default function AdminLogin() {
     }
 
     setLoading(true);
+    setNotice("");
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    setLoading(false);
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
 
-    if (error) {
-      toast.error(error.message);
-      return;
+      await supabase.auth.getSession();
+
+      const adminCheck = await fetch("/api/admin/activity", {
+        method: "POST",
+        credentials: "include",
+        cache: "no-store",
+      });
+
+      if (
+        adminCheck.redirected ||
+        adminCheck.status === 401 ||
+        adminCheck.url.includes("/admin/login")
+      ) {
+        await supabase.auth.signOut();
+        setNotice("This account is not allowed to access the admin area.");
+        toast.error("This account is not allowed to access the admin area");
+        return;
+      }
+
+      const params = new URLSearchParams(window.location.search);
+      const nextPath = params.get("next");
+      const redirectPath =
+        nextPath && nextPath.startsWith("/") && !nextPath.startsWith("//")
+          ? nextPath
+          : "/admin";
+
+      toast.success("Logged in successfully");
+      router.replace(redirectPath);
+      router.refresh();
+    } finally {
+      setLoading(false);
     }
-
-    toast.success("Logged in successfully");
-    await supabase.auth.getSession();
-    router.replace("/admin");
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {

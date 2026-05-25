@@ -23,13 +23,10 @@ function getAllowedEmails() {
 function isAllowedAdmin(user: any) {
   const allowedEmails = getAllowedEmails();
   const email = String(user?.email || "").toLowerCase();
-  const role = user?.app_metadata?.role || user?.user_metadata?.role;
+  const role = user?.app_metadata?.role;
+  const hasAdminRole = role === "admin" || user?.app_metadata?.admin === true;
 
-  if (allowedEmails.length > 0) {
-    return allowedEmails.includes(email);
-  }
-
-  return role === "admin" || user?.app_metadata?.admin === true;
+  return allowedEmails.includes(email) || hasAdminRole;
 }
 
 function redirectToLogin(req: NextRequest, reason?: "expired" | "unauthorized") {
