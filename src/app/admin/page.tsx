@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { formatCurrency } from "@/lib/currency";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -63,7 +64,7 @@ export default async function AdminDashboard() {
 ">
           <p className="text-zinc-400 text-sm">Estimated Revenue</p>
           <h2 className="text-2xl font-bold mt-2">
-            ${totalRevenue}
+            {formatCurrency(totalRevenue)}
           </h2>
         </div>
 
@@ -79,7 +80,7 @@ export default async function AdminDashboard() {
 ">
           <p className="text-zinc-400 text-sm">Avg Price</p>
           <h2 className="text-2xl font-bold mt-2">
-            ${totalBeats ? (totalRevenue / totalBeats).toFixed(2) : 0}
+            {formatCurrency(totalBeats ? totalRevenue / totalBeats : 0)}
           </h2>
         </div>
 
@@ -112,7 +113,7 @@ export default async function AdminDashboard() {
               </div>
 
               <div className="text-sm text-purple-400 font-semibold">
-                ${beat.price_basic}
+                {formatCurrency(beat.price_basic)}
               </div>
             </div>
           ))}

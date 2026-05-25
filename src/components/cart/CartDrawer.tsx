@@ -4,6 +4,7 @@ import GlassButton from "@/components/ui/GlassButton";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/lib/CartContext";
+import { formatCurrency } from "@/lib/currency";
 import { X, Trash2 } from "lucide-react";
 
 type Props = {
@@ -157,7 +158,7 @@ export default function CartDrawer({ open, setOpen }: Props) {
                         {item.license} license
                       </p>
                       <p className="text-purple-400 font-semibold">
-                        ${item.price}
+                        {formatCurrency(item.price)}
                       </p>
                     </div>
 
@@ -178,17 +179,17 @@ export default function CartDrawer({ open, setOpen }: Props) {
             <div className="border-t border-zinc-800 p-4 space-y-2 bg-zinc-950">
               <div className="flex justify-between text-sm text-zinc-400">
                 <span>Subtotal</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>{formatCurrency(subtotal)}</span>
               </div>
 
               <div className="flex justify-between text-sm text-zinc-400">
                 <span>Tax</span>
-                <span>${tax.toFixed(2)}</span>
+                <span>{formatCurrency(tax)}</span>
               </div>
 
               <div className="flex justify-between text-lg font-bold text-white">
                 <span>Total</span>
-                <span>${total.toFixed(2)}</span>
+                <span>{formatCurrency(total)}</span>
               </div>
 
               {/* 💎 LIQUID GLASS CHECKOUT BUTTON */}

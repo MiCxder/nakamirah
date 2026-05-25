@@ -1,6 +1,7 @@
 "use client";
 
 import { useCart } from "@/lib/CartContext";
+import { formatCurrency } from "@/lib/currency";
 
 export default function CartPage() {
   const { cart, removeFromCart } = useCart();
@@ -31,7 +32,7 @@ export default function CartPage() {
 
               <div className="text-right">
                 <p className="text-purple-400 font-bold">
-                  ${item.price}
+                  {formatCurrency(item.price)}
                 </p>
 
                 <button
@@ -48,7 +49,7 @@ export default function CartPage() {
           <div className="flex justify-between items-center mt-10 border-t border-zinc-700 pt-6">
             <h2 className="text-xl font-semibold">Total</h2>
             <p className="text-2xl font-bold text-purple-400">
-              ${total}
+              {formatCurrency(total)}
             </p>
           </div>
 

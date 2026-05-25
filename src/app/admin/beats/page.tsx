@@ -15,6 +15,7 @@ export default function AdminBeatsPage() {
   const [genre, setGenre] = useState("");
   const [bpm, setBpm] = useState("");
   const [key, setKey] = useState("");
+  const [description, setDescription] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
   const [autoDetect, setAutoDetect] = useState(true);
   const [detecting, setDetecting] = useState(false);
@@ -138,6 +139,7 @@ export default function AdminBeatsPage() {
           genre,
           bpm: Number(bpm),
           musical_key: key,
+          description: description.trim() || null,
           cover: coverUrl,
           preview: previewUrl,
           ...(tagArray.length ? { tags: tagArray } : {}),
@@ -158,6 +160,7 @@ export default function AdminBeatsPage() {
       setGenre("");
       setBpm("");
       setKey("");
+      setDescription("");
       setCover(null);
       setPreview(null);
       setBasic("");
@@ -430,6 +433,14 @@ useEffect(() => {
             className="w-full bg-zinc-900 border border-zinc-800 px-4 py-3 rounded-xl focus:outline-none focus:border-purple-500"
           />
 
+          <textarea
+            placeholder="About this beat (optional)"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            rows={5}
+            className="w-full resize-none bg-zinc-900 border border-zinc-800 px-4 py-3 rounded-xl focus:outline-none focus:border-purple-500"
+          />
+
           <div className="grid grid-cols-2 gap-4">
             <input
               placeholder="BPM"
@@ -567,34 +578,37 @@ useEffect(() => {
         {/* RIGHT: PRICING */}
         <div className="space-y-4">
 
-          <h2 className="text-lg font-semibold mb-2">License Pricing</h2>
+          <h2 className="text-lg font-semibold mb-2">License Pricing (NGN)</h2>
 
           <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
-            <p className="text-sm text-zinc-400">Basic License</p>
+            <p className="text-sm text-zinc-400">Basic License (NGN)</p>
             <input
-              placeholder="Price"
+              placeholder="Price in naira"
               value={basic}
               onChange={(e) => setBasic(e.target.value)}
+              inputMode="decimal"
               className="w-full mt-2 bg-black border border-zinc-800 px-3 py-2 rounded-lg"
             />
           </div>
 
           <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
-            <p className="text-sm text-zinc-400">Premium License</p>
+            <p className="text-sm text-zinc-400">Premium License (NGN)</p>
             <input
-              placeholder="Price"
+              placeholder="Price in naira"
               value={premium}
               onChange={(e) => setPremium(e.target.value)}
+              inputMode="decimal"
               className="w-full mt-2 bg-black border border-zinc-800 px-3 py-2 rounded-lg"
             />
           </div>
 
           <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
-            <p className="text-sm text-zinc-400">Exclusive License</p>
+            <p className="text-sm text-zinc-400">Exclusive License (NGN)</p>
             <input
-              placeholder="Price"
+              placeholder="Price in naira"
               value={exclusive}
               onChange={(e) => setExclusive(e.target.value)}
+              inputMode="decimal"
               className="w-full mt-2 bg-black border border-zinc-800 px-3 py-2 rounded-lg"
             />
           </div>

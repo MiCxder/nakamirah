@@ -16,6 +16,7 @@ export default function EditBeatClient({ beat }: EditBeatClientProps) {
   const [genre, setGenre] = useState(beat.genre);
   const [bpm, setBpm] = useState(String(beat.bpm ?? ""));
   const [key, setKey] = useState(beat.musical_key ?? "");
+  const [description, setDescription] = useState(beat.description ?? "");
   const [tags, setTags] = useState((beat.tags ?? []).join(", "));
   const [basic, setBasic] = useState(String(beat.price_basic ?? ""));
   const [premium, setPremium] = useState(String(beat.price_premium ?? ""));
@@ -118,6 +119,7 @@ export default function EditBeatClient({ beat }: EditBeatClientProps) {
           genre,
           bpm: bpmValue,
           musical_key: key,
+          description: description.trim() || null,
           cover: coverUrl,
           tags: tagArray,
           price_basic: basicPrice,
@@ -207,28 +209,42 @@ export default function EditBeatClient({ beat }: EditBeatClientProps) {
             />
           </label>
 
+          <label className="space-y-2 block">
+            <span className="text-sm text-zinc-400">About This Beat</span>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={5}
+              placeholder="Optional producer notes, mood, usage ideas, or story behind the beat."
+              className="w-full resize-none rounded-2xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-white"
+            />
+          </label>
+
           <div className="grid gap-4 md:grid-cols-3">
             <label className="space-y-2">
-              <span className="text-sm text-zinc-400">Basic Price</span>
+              <span className="text-sm text-zinc-400">Basic Price (NGN)</span>
               <input
                 value={basic}
                 onChange={(e) => setBasic(e.target.value)}
+                inputMode="decimal"
                 className="w-full rounded-2xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-white"
               />
             </label>
             <label className="space-y-2">
-              <span className="text-sm text-zinc-400">Premium Price</span>
+              <span className="text-sm text-zinc-400">Premium Price (NGN)</span>
               <input
                 value={premium}
                 onChange={(e) => setPremium(e.target.value)}
+                inputMode="decimal"
                 className="w-full rounded-2xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-white"
               />
             </label>
             <label className="space-y-2">
-              <span className="text-sm text-zinc-400">Exclusive Price</span>
+              <span className="text-sm text-zinc-400">Exclusive Price (NGN)</span>
               <input
                 value={exclusive}
                 onChange={(e) => setExclusive(e.target.value)}
+                inputMode="decimal"
                 className="w-full rounded-2xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-white"
               />
             </label>

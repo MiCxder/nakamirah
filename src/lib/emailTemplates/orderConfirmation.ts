@@ -1,3 +1,5 @@
+import { formatCurrency } from "@/lib/currency";
+
 export function orderConfirmationEmail({
   customerName,
   items,
@@ -24,14 +26,14 @@ export function orderConfirmationEmail({
           .map(
             (item) => `
           <li>
-            ${item.title} (${item.license}) - $${item.price}
+            ${item.title} (${item.license}) - ${formatCurrency(item.price)}
           </li>
         `
           )
           .join("")}
       </ul>
 
-      <p><strong>Total: $${total}</strong></p>
+      <p><strong>Total: ${formatCurrency(total)}</strong></p>
 
       <a href="https://yourdomain.com/downloads">
         Download your beats
