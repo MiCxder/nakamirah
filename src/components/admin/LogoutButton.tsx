@@ -3,12 +3,8 @@
 import { useState } from "react";
 import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import { toast } from "sonner";
+import { supabase } from "@/lib/supabase";
 
 interface LogoutButtonProps {
   open?: boolean;
@@ -24,8 +20,16 @@ export function LogoutButton({ open = true }: LogoutButtonProps) {
 
   const handleConfirmLogout = async () => {
     setShowConfirm(false);
-    await supabase.auth.signOut();
-    router.push("/admin/login");
+
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
+    router.replace("/admin/login");
+    router.refresh();
   };
 
   const handleCancel = () => {

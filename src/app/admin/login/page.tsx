@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Lock, Eye, EyeOff, Mail } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
@@ -12,6 +12,19 @@ export default function AdminLogin() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [notice, setNotice] = useState("");
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get("expired")) {
+      setNotice("Your admin session expired after inactivity. Please sign in again.");
+      supabase.auth.signOut();
+    } else if (params.get("unauthorized")) {
+      setNotice("This account is not allowed to access the admin area.");
+      supabase.auth.signOut();
+    }
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,6 +79,12 @@ export default function AdminLogin() {
 
           {/* Form */}
           <form onSubmit={handleLogin} className="space-y-5">
+            {notice && (
+              <p className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-200">
+                {notice}
+              </p>
+            )}
+
             {/* Email Field */}
             <div className="space-y-2">
               <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400">Email</label>

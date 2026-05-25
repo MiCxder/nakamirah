@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Music, Plus, BarChart3, LayoutDashboard, Menu } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { LogoutButton } from "@/components/admin/LogoutButton";
+import { AdminSessionGuard } from "@/components/admin/AdminSessionGuard";
 
 export default function AdminLayout({
   children,
@@ -46,6 +47,7 @@ export default function AdminLayout({
     <div className="flex min-h-screen bg-zinc-950 text-white">
 
 <Toaster position="top-right" richColors />
+<AdminSessionGuard />
 
       {/* SIDEBAR (hidden on login) */}
       {!hideSidebar && (
