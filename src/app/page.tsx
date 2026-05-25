@@ -6,6 +6,9 @@ import SectionCarousel from "@/components/home/SectionCarousel";
 import Image from "next/image";
 import FadeIn from "@/components/ui/FadeIn";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function HomePage() {
   // Fetch multiple curated lists concurrently
   const [featuredRes, trendingRes, drillRes, afroRes, trapRes, cinematicRes, amapianoRes] =
